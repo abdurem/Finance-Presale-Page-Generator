@@ -6,9 +6,7 @@ A functional prototype that generates high-converting finance presale pages usin
 
 ## 🚀 Live Demo
 
-> **[🔗 View the live app here](https://your-vercel-deployment-url.vercel.app/)**
-> *(Update this link after deployment)*
-
+> **[🔗 View the live app here](https://github.com/abdurem/Finance-Presale-Page-Generator)**
 ---
 
 ## 🎯 Features
