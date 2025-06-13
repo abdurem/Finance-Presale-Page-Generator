@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePresale } from "./PresaleContext";
 
 export default function Home() {
   const [form, setForm] = useState({
@@ -13,6 +14,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const router = useRouter();
+  const { setPresale } = usePresale();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,17 +52,9 @@ export default function Home() {
       if (!res.ok) throw new Error("Failed to generate content");
       const data = await res.json();
 
-      // 2. Store presale content and get id
-      const storeRes = await fetch("/api/presale", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!storeRes.ok) throw new Error("Failed to save presale");
-      const { id } = await storeRes.json();
-
-      // 3. Redirect to /presale/[id]
-      router.push(`/presale/${id}`);
+      // 2. Save presale data to context and redirect to /presale
+      setPresale(data);
+      router.push('/presale');
     } catch (err) {
       setError(err.message || "Unknown error");
     } finally {
@@ -84,7 +78,7 @@ export default function Home() {
               name="credit_card_name"
               type="text"
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-gray-900"
               value={form.credit_card_name}
               onChange={handleChange}
               placeholder="e.g. Velocity Platinum Rewards Card"
@@ -98,7 +92,7 @@ export default function Home() {
               name="target_audience"
               type="text"
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-gray-900"
               value={form.target_audience}
               onChange={handleChange}
               placeholder="e.g. Young professionals looking to maximize travel perks"
@@ -113,7 +107,7 @@ export default function Home() {
                 <div key={idx} className="flex gap-2">
                   <input
                     type="text"
-                    className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-gray-900"
                     value={benefit}
                     required
                     placeholder={`Benefit ${idx + 1}`}
